@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Retail Site Selection — QGIS Portfolio Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-dark: #0a3d2b;
+    --green-mid: #0f6e56;
+    --green-light: #1d9e75;
+    --green-pale: #e1f5ee;
+    --amber: #ba7517;
+    --amber-pale: #faeeda;
+    --ink: #1a1a18;
+    --ink-mid: #3d3d38;
+    --ink-light: #6b6b64;
+    --ink-faint: #9b9b92;
+    --rule: #e2e0d8;
+    --bg: #faf9f6;
+    --bg-card: #ffffff;
+    --radius: 6px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(250,249,246,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+  }
+  .nav-brand {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px; font-weight: 500;
+    color: var(--green-mid);
+    letter-spacing: .04em;
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 1.5rem; }
+  .nav-links a {
+    font-size: 13px; color: var(--ink-light);
+    text-decoration: none; letter-spacing: .01em;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+
+  /* ── HERO ── */
+  .hero {
+    max-width: 900px; margin: 0 auto;
+    padding: 5rem 2rem 4rem;
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 2rem; align-items: start;
+  }
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--green-mid);
+    margin-bottom: 1.25rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block; width: 24px; height: 1px;
+    background: var(--green-light);
+  }
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 400; line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--green-mid);
+  }
+  .hero-desc {
+    font-size: 16px; font-weight: 300;
+    color: var(--ink-mid); line-height: 1.75;
+    max-width: 540px;
+  }
+  .hero-meta {
+    margin-top: 2rem;
+    display: flex; flex-wrap: wrap; gap: 12px;
+  }
+  .meta-chip {
+    font-size: 12px; font-family: 'DM Mono', monospace;
+    color: var(--ink-light);
+    border: 1px solid var(--rule);
+    border-radius: 100px;
+    padding: 5px 14px;
+    background: var(--bg-card);
+  }
+  .hero-aside {
+    padding-top: .5rem;
+  }
+  .score-badge {
+    background: var(--green-dark);
+    color: #e1f5ee;
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    text-align: center;
+    min-width: 130px;
+  }
+  .score-badge .score-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.5rem; line-height: 1;
+    color: #9fe1cb;
+  }
+  .score-badge .score-label {
+    font-size: 11px; font-family: 'DM Mono', monospace;
+    letter-spacing: .06em; text-transform: uppercase;
+    color: #5dcaa5; margin-top: 4px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    max-width: 900px; margin: 0 auto;
+    border: none; border-top: 1px solid var(--rule);
+  }
+
+  /* ── SECTION WRAPPER ── */
+  .section {
+    max-width: 900px; margin: 0 auto;
+    padding: 3.5rem 2rem;
+  }
+  .section + .section { padding-top: 0; }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 1.5rem;
+  }
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem; font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 1rem;
+  }
+  p { font-weight: 300; color: var(--ink-mid); line-height: 1.8; }
+  p + p { margin-top: .85rem; }
+
+  /* ── STAT ROW ── */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-top: 2rem;
+  }
+  .stat {
+    background: var(--bg-card);
+    padding: 1.5rem 1.25rem;
+  }
+  .stat-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem; color: var(--green-mid);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 12px; color: var(--ink-light);
+    margin-top: 6px; line-height: 1.4;
+  }
+
+  /* ── MAP PANEL ── */
+  .map-panel {
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--bg-card);
+    margin-top: 2rem;
+  }
+  .map-panel svg { display: block; width: 100%; height: auto; }
+  .map-legend {
+    padding: .85rem 1.25rem;
+    border-top: 1px solid var(--rule);
+    display: flex; flex-wrap: wrap; gap: 18px;
+    background: var(--bg);
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 12px; color: var(--ink-light);
+  }
+  .leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── DATA LAYERS ── */
+  .layers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-top: 2rem;
+  }
+  .layer {
+    background: var(--bg-card);
+    padding: 1.25rem;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .layer-icon {
+    width: 34px; height: 34px; flex-shrink: 0;
+    border-radius: 6px;
+    background: var(--green-pale);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .layer-title { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 3px; }
+  .layer-desc { font-size: 12px; color: var(--ink-light); line-height: 1.5; font-weight: 300; }
+
+  /* ── METHODOLOGY STEPS ── */
+  .steps { margin-top: 2rem; }
+  .step {
+    display: grid; grid-template-columns: 48px 1fr;
+    gap: 0; border-top: 1px solid var(--rule);
+    padding: 1.5rem 0;
+  }
+  .step:last-child { border-bottom: 1px solid var(--rule); }
+  .step-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--ink-faint);
+    padding-top: 3px;
+  }
+  .step-content {}
+  .step-title {
+    font-size: 14px; font-weight: 500; color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .step-body { font-size: 13px; color: var(--ink-light); line-height: 1.7; font-weight: 300; }
+
+  /* ── RESULTS TABLE ── */
+  .results-table {
+    width: 100%; border-collapse: collapse;
+    margin-top: 2rem; font-size: 13px;
+  }
+  .results-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ink-faint);
+    text-align: left; padding: 0 1rem .75rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .results-table th:first-child { padding-left: 0; }
+  .results-table td {
+    padding: .9rem 1rem;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-mid);
+    vertical-align: top;
+  }
+  .results-table td:first-child { padding-left: 0; font-weight: 500; color: var(--ink); }
+  .results-table tr:last-child td { border-bottom: none; }
+  .score-pill {
+    display: inline-block;
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    padding: 3px 10px; border-radius: 100px;
+    background: var(--green-pale); color: var(--green-mid);
+  }
+  .score-pill.amber { background: var(--amber-pale); color: var(--amber); }
+
+  /* ── TOOLS ── */
+  .tools-wrap {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 1.5rem;
+  }
+  .tool {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px; color: var(--ink-mid);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 5px 12px;
+    background: var(--bg-card);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--rule);
+    padding: 2rem;
+    display: flex; justify-content: center;
+    font-size: 12px; color: var(--ink-faint);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: .03em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero { animation: fadeUp .6s ease both; }
+  .section { animation: fadeUp .6s ease both; animation-delay: .1s; }
+
+  @media (max-width: 640px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-aside { display: none; }
+    nav { padding: 0 1rem; }
+    .nav-links { display: none; }
+    .section { padding: 2.5rem 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="#">GEO / PORTFOLIO</a>
+  <div class="nav-links">
+    <a href="#overview">Overview</a>
+    <a href="#map">Map</a>
+    <a href="#methodology">Methodology</a>
+    <a href="#results">Results</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div>
+    <div class="hero-eyebrow">Geospatial Analysis · QGIS 3.34</div>
+    <h1>Retail Site Selection<br>for a <em>Coffee Chain</em><br>Expansion</h1>
+    <p class="hero-desc">A multi-criteria geospatial analysis identifying optimal new store locations across Queens and the Bronx, using demographic data, foot traffic, competitor proximity, transit access, and zoning layers.</p>
+    <div class="hero-meta">
+      <span class="meta-chip">New York Metro</span>
+      <span class="meta-chip">2024</span>
+      <span class="meta-chip">Retail / Consumer</span>
+      <span class="meta-chip">QGIS · PostGIS · PyQGIS</span>
+    </div>
+  </div>
+  <div class="hero-aside">
+    <div class="score-badge">
+      <div class="score-num">91</div>
+      <div class="score-label">Top site score</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider"/>
+
+<!-- OVERVIEW -->
+<div class="section" id="overview">
+  <div class="section-label">Overview</div>
+  <h2>The business problem</h2>
+  <p>A specialty coffee brand with 12 existing locations across Manhattan and Brooklyn wanted to expand into Queens and the Bronx. Opening in the wrong location carries a 3–5 year lease commitment and significant capital outlay.</p>
+  <p>The goal was to reduce site selection risk by replacing gut-feel decisions with a reproducible, data-driven scoring model built in QGIS — screening 12 candidate zones and surfacing 3 high-priority sites for leasing team review.</p>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-num">3</div>
+      <div class="stat-label">High-priority sites<br>identified (score ≥ 80)</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">12</div>
+      <div class="stat-label">Candidate zones<br>screened</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">340</div>
+      <div class="stat-label">Competitor POIs<br>geocoded & buffered</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">5</div>
+      <div class="stat-label">Weighted criteria in<br>the suitability model</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider"/>
+
+<!-- DATA LAYERS -->
+<div class="section">
+  <div class="section-label">Data layers</div>
+  <h2>Inputs & sources</h2>
+  <div class="layers">
+    <div class="layer">
+      <div class="layer-icon">👥</div>
+      <div>
+        <div class="layer-title">Census demographics</div>
+        <div class="layer-desc">ACS 5-year estimates — median income, 25–44 age cohort density, population per block group</div>
+      </div>
+    </div>
+    <div class="layer">
+      <div class="layer-icon">🚶</div>
+      <div>
+        <div class="layer-title">Foot traffic</div>
+        <div class="layer-desc">SafeGraph POI visit data aggregated to 250m hex grid, weekday vs weekend breakdowns</div>
+      </div>
+    </div>
+    <div class="layer">
+      <div class="layer-icon">☕</div>
+      <div>
+        <div class="layer-title">Competitor locations</div>
+        <div class="layer-desc">Scraped and geocoded 340 café POIs from OSM and Google Places API</div>
+      </div>
+    </div>
+    <div class="layer">
+      <div class="layer-icon">🏢</div>
+      <div>
+        <div class="layer-title">Zoning & land use</div>
+        <div class="layer-desc">NYC PLUTO dataset — commercial zoning classifications, storefront availability signals</div>
+      </div>
+    </div>
+    <div class="layer">
+      <div class="layer-icon">🚇</div>
+      <div>
+        <div class="layer-title">Transit access</div>
+        <div class="layer-desc">MTA subway entrances, bus stop density; 5-min walk-shed polygons per station via QNEAT3</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider"/>
+
+<!-- MAP -->
+<div class="section" id="map">
+  <div class="section-label">Suitability map</div>
+  <h2>Queens & the Bronx — composite scores</h2>
+  <div class="map-panel">
+    <svg viewBox="0 0 860 420" xmlns="http://www.w3.org/2000/svg">
+      <rect width="860" height="420" fill="#dce8dc"/>
+      <!-- Queens -->
+      <polygon points="430,70 680,58 750,130 740,260 690,310 560,335 450,300 400,240 385,155" fill="#c8ddb8" stroke="#a8c490" stroke-width="1.2"/>
+      <!-- Bronx -->
+      <polygon points="200,30 430,18 480,100 455,165 380,200 270,190 195,130" fill="#bcd4d8" stroke="#92b8bc" stroke-width="1.2"/>
+      <!-- Water -->
+      <ellipse cx="380" cy="250" rx="35" ry="18" fill="#a8c8e8" opacity=".7"/>
+      <rect x="140" y="120" width="45" height="95" rx="4" fill="#a8c8e8" opacity=".6"/>
+      <!-- Grid lines -->
+      <line x1="400" y1="70" x2="400" y2="335" stroke="white" stroke-width="0.6" opacity=".5"/>
+      <line x1="480" y1="60" x2="480" y2="330" stroke="white" stroke-width="0.6" opacity=".5"/>
+      <line x1="560" y1="58" x2="560" y2="330" stroke="white" stroke-width="0.6" opacity=".5"/>
+      <line x1="640" y1="65" x2="640" y2="315" stroke="white" stroke-width="0.6" opacity=".5"/>
+      <line x1="300" y1="30" x2="300" y2="200" stroke="white" stroke-width="0.6" opacity=".5"/>
+      <line x1="360" y1="25" x2="360" y2="210" stroke="white" stroke-width="0.6" opacity=".5"/>
+      <line x1="220" y1="60" x2="490" y2="88" stroke="white" stroke-width="0.6" opacity=".5"/>
+      <line x1="200" y1="110" x2="750" y2="140" stroke="white" stroke-width="0.6" opacity=".5"/>
+      <line x1="400" y1="195" x2="745" y2="218" stroke="white" stroke-width="0.6" opacity=".5"/>
+      <line x1="415" y1="265" x2="695" y2="282" stroke="white" stroke-width="0.6" opacity=".5"/>
+      <!-- Suitability blobs -->
+      <ellipse cx="530" cy="135" rx="70" ry="48" fill="#1d9e75" opacity=".18"/>
+      <ellipse cx="530" cy="135" rx="40" ry="26" fill="#1d9e75" opacity=".22"/>
+      <ellipse cx="315" cy="100" rx="58" ry="38" fill="#1d9e75" opacity=".16"/>
+      <ellipse cx="315" cy="100" rx="30" ry="18" fill="#1d9e75" opacity=".21"/>
+      <ellipse cx="625" cy="245" rx="50" ry="34" fill="#1d9e75" opacity=".16"/>
+      <ellipse cx="625" cy="245" rx="26" ry="17" fill="#1d9e75" opacity=".2"/>
+      <ellipse cx="460" cy="270" rx="36" ry="24" fill="#ef9f27" opacity=".22"/>
+      <ellipse cx="370" cy="165" rx="30" ry="20" fill="#ef9f27" opacity=".18"/>
+      <!-- Recommended sites -->
+      <circle cx="532" cy="133" r="11" fill="#0f6e56" stroke="white" stroke-width="2.5"/>
+      <text x="532" y="138" font-size="12" fill="white" text-anchor="middle" font-weight="600" font-family="DM Mono, monospace">1</text>
+      <circle cx="317" cy="98" r="11" fill="#0f6e56" stroke="white" stroke-width="2.5"/>
+      <text x="317" y="103" font-size="12" fill="white" text-anchor="middle" font-weight="600" font-family="DM Mono, monospace">2</text>
+      <circle cx="627" cy="243" r="11" fill="#0f6e56" stroke="white" stroke-width="2.5"/>
+      <text x="627" y="248" font-size="12" fill="white" text-anchor="middle" font-weight="600" font-family="DM Mono, monospace">3</text>
+      <!-- Moderate sites -->
+      <circle cx="462" cy="268" r="8" fill="#ba7517" stroke="white" stroke-width="2"/>
+      <circle cx="370" cy="164" r="8" fill="#ba7517" stroke="white" stroke-width="2"/>
+      <!-- Score labels -->
+      <rect x="550" y="117" width="66" height="20" rx="4" fill="white" opacity=".9"/>
+      <text x="583" y="131" font-size="11" fill="#0f6e56" text-anchor="middle" font-weight="500" font-family="DM Mono, monospace">score 91</text>
+      <rect x="335" y="83" width="66" height="20" rx="4" fill="white" opacity=".9"/>
+      <text x="368" y="97" font-size="11" fill="#0f6e56" text-anchor="middle" font-weight="500" font-family="DM Mono, monospace">score 87</text>
+      <rect x="645" y="228" width="66" height="20" rx="4" fill="white" opacity=".9"/>
+      <text x="678" y="242" font-size="11" fill="#0f6e56" text-anchor="middle" font-weight="500" font-family="DM Mono, monospace">score 83</text>
+      <!-- Existing footprint -->
+      <rect x="55" y="175" width="130" height="80" rx="5" fill="#b8c8d8" stroke="#8aaabb" stroke-width="1"/>
+      <text x="120" y="202" font-size="10" fill="#185fa5" text-anchor="middle" font-weight="500" font-family="DM Sans, sans-serif">Manhattan /</text>
+      <text x="120" y="218" font-size="10" fill="#185fa5" text-anchor="middle" font-weight="500" font-family="DM Sans, sans-serif">Brooklyn</text>
+      <text x="120" y="234" font-size="10" fill="#185fa5" text-anchor="middle" font-family="DM Sans, sans-serif">existing 12 stores</text>
+      <!-- Borough labels -->
+      <text x="590" y="60" font-size="13" fill="#3b6d11" font-weight="500" font-family="DM Sans, sans-serif">Queens</text>
+      <text x="275" y="28" font-size="13" fill="#185fa5" font-weight="500" font-family="DM Sans, sans-serif">The Bronx</text>
+    </svg>
+    <div class="map-legend">
+      <span class="legend-item"><span class="leg-dot" style="background:#0f6e56"></span>Top-tier site (score ≥ 80)</span>
+      <span class="legend-item"><span class="leg-dot" style="background:#ba7517"></span>Moderate site (score 60–79)</span>
+      <span class="legend-item"><span class="leg-dot" style="background:#1d9e75;opacity:.6"></span>High suitability zone</span>
+      <span class="legend-item"><span class="leg-dot" style="background:#ef9f27;opacity:.6"></span>Moderate suitability</span>
+    </div>
+  </div>
+</div>
+
+<hr class="divider"/>
+
+<!-- METHODOLOGY -->
+<div class="section" id="methodology">
+  <div class="section-label">Methodology</div>
+  <h2>Analytical workflow</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <div class="step-title">Data ingestion & reprojection</div>
+        <div class="step-body">Loaded census block group shapefiles, MTA GTFS feeds, NYC PLUTO parcel data, and SafeGraph CSVs. Reprojected all layers to EPSG:2263 (NY State Plane Long Island) for accurate metric distance calculations across all analyses.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <div class="step-title">Competitor proximity analysis</div>
+        <div class="step-body">Geocoded 340 café and coffee POIs sourced from OSM Overpass API and Google Places. Generated 400m exclusion buffers using the QGIS Buffer tool. Areas overlapping existing cafés were penalised in the final scoring model to reduce market cannibalisation risk.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <div class="step-title">Walk-shed & transit scoring</div>
+        <div class="step-body">Created 5-minute walk-shed polygons (400m network buffers) from each subway entrance using the QNEAT3 plugin and OpenStreetMap road network. Commercial parcels within walk-shed zones received an elevated transit access score in the suitability model.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-content">
+        <div class="step-title">Multi-criteria weighted overlay</div>
+        <div class="step-body">Rasterised all scored layers at 50m resolution and combined them via the QGIS Raster Calculator using a weighted sum formula: foot traffic (30%), demographics (25%), transit access (25%), competitor gap (15%), commercial zoning (5%). Output was a continuous suitability surface across the study area.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">05</div>
+      <div class="step-content">
+        <div class="step-title">Site shortlisting & deliverable</div>
+        <div class="step-body">Vectorised top-scoring raster cells using QGIS Polygonize, then spatially joined results to the PLUTO parcel dataset to return lot-level attributes. Exported a prioritised shortlist with scores for each criterion. Final maps rendered as a QGIS print layout PDF for the leasing team.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider"/>
+
+<!-- RESULTS -->
+<div class="section" id="results">
+  <div class="section-label">Results</div>
+  <h2>Site shortlist</h2>
+  <table class="results-table">
+    <thead>
+      <tr>
+        <th>Site</th>
+        <th>Area</th>
+        <th>Composite score</th>
+        <th>Key strengths</th>
+        <th>Flags</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Site 1</td>
+        <td>Astoria, Queens</td>
+        <td><span class="score-pill">91 / 100</span></td>
+        <td>High foot traffic, strong transit (N/W lines), low competitor density</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Site 2</td>
+        <td>Fordham, Bronx</td>
+        <td><span class="score-pill">87 / 100</span></td>
+        <td>Dense 25–44 cohort, proximity to Fordham University, B/D subway</td>
+        <td>Moderate competitor count within 400m</td>
+      </tr>
+      <tr>
+        <td>Site 3</td>
+        <td>Jackson Heights, Queens</td>
+        <td><span class="score-pill">83 / 100</span></td>
+        <td>High weekday foot traffic, 7 train hub, income growth trend</td>
+        <td>Zoning review recommended</td>
+      </tr>
+      <tr>
+        <td>Site 4</td>
+        <td>Sunnyside, Queens</td>
+        <td><span class="score-pill amber">72 / 100</span></td>
+        <td>Good demographics, low rent index</td>
+        <td>Lower Saturday foot traffic</td>
+      </tr>
+      <tr>
+        <td>Site 5</td>
+        <td>Mott Haven, Bronx</td>
+        <td><span class="score-pill amber">68 / 100</span></td>
+        <td>Emerging neighbourhood, no direct competitors</td>
+        <td>Below foot traffic threshold at this time</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<hr class="divider"/>
+
+<!-- TOOLS -->
+<div class="section">
+  <div class="section-label">Stack</div>
+  <h2>Tools & libraries</h2>
+  <div class="tools-wrap">
+    <span class="tool">QGIS 3.34</span>
+    <span class="tool">PostGIS</span>
+    <span class="tool">PyQGIS</span>
+    <span class="tool">QNEAT3</span>
+    <span class="tool">Raster Calculator</span>
+    <span class="tool">Python 3.11</span>
+    <span class="tool">GeoPandas</span>
+    <span class="tool">Pandas</span>
+    <span class="tool">NYC Open Data</span>
+    <span class="tool">SafeGraph POI</span>
+    <span class="tool">OSM Overpass API</span>
+    <span class="tool">ACS Census API</span>
+    <span class="tool">EPSG:2263</span>
+    <span class="tool">QGIS Print Layout</span>
+  </div>
+</div>
+
+<footer>
+  Geospatial analysis portfolio · QGIS · New York Metro · 2024
+</footer>
+
+</body>
+</html>
